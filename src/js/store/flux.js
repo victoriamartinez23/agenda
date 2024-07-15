@@ -1,43 +1,84 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			agenda: []		
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			crearAgenda: () => {
+				fetch("https://playground.4geeks.com/contact/agendas/victoria", {
+            		method: 'POST',
+					headers: {
+                	"Content-Type": "application/json"},
+       				})
+					.then((response) => {
+						if (response.status === 201) {
+							obtenerAgenda();
+						} else {
+							return response.json();
+						}})
+				.then(data=>console.log(data))
+				},	
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+			obtenerAgenda: () => {
+				fetch("https://playground.4geeks.com/contact/agendas/victoria")
+				.then((response) => {
+					if (response.status === 404) {
+						crearAgenda();
+					} else {
+						return response.json();
+					}
+				})
+				.then(data=>setStore({agenda: data.contacts}))
+				.catch(error => console.log(error))
+			},
 
-				//reset the global store
-				setStore({ demo: demo });
-			}
+			crearContacto: (name, address, phone, email) => {
+				fetch("https://playground.4geeks.com/contact/agendas/victoria/contacts", {
+					method: 'POST',
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						"name": name,
+						"phone": phone,
+						"email": email,
+						"address": address,
+					})
+				})
+				.then((response) => response.json())
+				.then(data => setStore({agenda: data.contacts}))
+				.catch(error => console.error(error))
+				getActions().obtenerAgenda();
+			},
+
+			borrarContacto: (id)  => {
+				fetch(`https://playground.4geeks.com/contact/agendas/victoria/contacts/${id}`, {
+            		method: 'DELETE',
+					headers: {"Content-Type": "application/json"}})
+				.then((response)=>response.json())
+				.then(data => setStore({agenda: data.contacts}))
+				.catch(error => console.log(error))
+			},
+
+			// editarContacto: (id, name, address, phone, email) => {
+			// 	fetch(`https://playground.4geeks.com/contact/agendas/victoria/contacts/${id}`, {
+			// 		method: 'PUT',
+			// 		headers: {
+			// 			"Content-Type": "application/json"
+			// 		},
+			// 		body: JSON.stringify({
+			// 			"name": name,
+			// 			"phone": "",
+			// 			"email": "",
+			// 			"address": ""
+			// 		})
+			// 		.then((response) => response.json())
+			// 		.then(data => setStore({agenda: data.contacts}))
+			// 		.catch(error => console.error(error))
+			// 	} 
+
+			// 	)
+			// }
 		}
 	};
 };

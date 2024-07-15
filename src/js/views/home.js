@@ -1,15 +1,40 @@
-import React from "react";
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useContext, useEffect, useState } from "react";
+import { Context } from "../store/appContext.js";
 import "../../styles/home.css";
+import { CartaContacto } from "../component/cartacontacto.jsx";
+import { ModalBorrarContacto } from "../component/modalborrarcontacto.jsx";
+import { ModalEditarContacto } from "../component/modaleditarcontacto.jsx";
 
-export const Home = () => (
-	<div className="text-center mt-5">
-		<h1>Hello Rigo!</h1>
-		<p>
-			<img src={rigoImage} />
-		</p>
-		<a href="#" className="btn btn-success">
-			If you see this green button, bootstrap is working
-		</a>
+export const Home = () => {
+	const {store, actions} = useContext(Context);
+	const [id, setId] = useState(null);
+
+useEffect(() => {
+	actions.obtenerAgenda()
+}, [])
+	
+	useEffect(() => {
+		actions.obtenerAgenda()
+	}, []);
+
+	return (
+	<div>
+		{store.agenda.map((item) => (
+			<CartaContacto 
+				key={item.id}
+				name={item.name}
+				address={item.address}
+				phone={item.phone}
+				email={item.email}
+				id={item.id}
+				nuevoId={() => setId(item.id)}
+			/>
+		))}
+		<ModalBorrarContacto 
+		id={id}/>
+		<ModalEditarContacto 
+		id={id}
+		name={name}/>
 	</div>
-);
+	)
+};
