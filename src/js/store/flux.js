@@ -36,7 +36,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				.catch(error => console.log(error));
 			},
 
-			
 			crearContacto: (name, address, phone, email) => {
 				fetch("https://playground.4geeks.com/contact/agendas/victoria/contacts", {
 					method: 'POST',
@@ -52,7 +51,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 				.then((response) => {
 					if (!response.ok) {
-						throw new Error(`Error ${response.status}: ${response.statusText}`);
+						throw new Error(`Error`);
 					}
 					return response.json();
 				})
@@ -70,7 +69,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 				.then((response) => {
 					if (!response.ok) {
-						throw new Error(`Error ${response.status}: ${response.statusText}`);
+						throw new Error(`Error`);
 					}
 					return response;
 				})
