@@ -17,6 +17,7 @@ export const FormularioNuevoContacto = () => {
         setAddress("")
         setPhone("")
         setEmail("")
+        window.location.href = "/";
     }
 
 return (
@@ -41,9 +42,7 @@ return (
         <input type="email" className="form-control" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </div>
       <div className="d-grid gap-2">
-      <Link to="/">
         <button className="btn btn-primary" type="button" onClick={(e)=> guardarContacto(e)}> Save </button>
-        </Link> 
       </div>
     </form>
     <Link to="/">
